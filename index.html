@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Google AI Studio App</title>
+
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xxw2wcblee");
+    </script>
+
+    <script type="module" crossorigin="" src="js/index-CoKb2_-W.js"></script>
+    <link rel="stylesheet" crossorigin="" href="css/index-DvBOxQj9.css">
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- ================= TRACKING PASSTHROUGH ================= -->
+    <script>
+    (function () {
+      'use strict';
+      var PARAMS = ['utm_content', 'utm_id', 'click_id', 'kwclid'];
+      var DESTINOS = ['t.me', 'telegram.me', 'telegram.dog'];
+      var STORAGE_KEY = '_tk';
+
+      function capturar() {
+        var url = new URLSearchParams(location.search), dados = {}, achou = false;
+        PARAMS.forEach(function (p) {
+          var v = url.get(p);
+          if (v) { dados[p] = v; achou = true; }
+        });
+        if (achou) {
+          try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); } catch (e) {}
+          return dados;
+        }
+        try {
+          var s = sessionStorage.getItem(STORAGE_KEY);
+          if (s) return JSON.parse(s);
+        } catch (e) {}
+        return {};
+      }
+
+      var TRACKING = capturar();
+
+      function ehDestino(href) {
+        try {
+          var h = new URL(href, location.href).hostname.replace(/^www\./, '');
+          return DESTINOS.indexOf(h) !== -1;
+        } catch (e) { return false; }
+      }
+
+      function anexar(href) {
+        if (!Object.keys(TRACKING).length) return href;
+        try {
+          var u = new URL(href, location.href);
+          Object.keys(TRACKING).forEach(function (k) {
+            if (!u.searchParams.has(k)) u.searchParams.set(k, TRACKING[k]);
+          });
+          return u.toString();
+        } catch (e) { return href; }
+      }
+
+      document.addEventListener('click', function (ev) {
+        var alvo = (ev.target && ev.target.nodeType === 3) ? ev.target.parentElement : ev.target;
+        var a = (alvo && alvo.closest) ? alvo.closest('a[href]') : null;
+        if (!a || !ehDestino(a.href)) return;
+        var novo = anexar(a.href);
+        if (novo !== a.href) a.href = novo;
+      }, true);
+
+      window.__tk = {
+        params: TRACKING,
+        url: anexar,
+        query: function () { return new URLSearchParams(TRACKING).toString(); }
+      };
+
+      console.log('[tk]', Object.keys(TRACKING).length ? TRACKING : 'sem parametros');
+    })();
+    </script>
+
+    <!-- ================= SHARKBOT UTMs (links internos) ================= -->
+    <script>
+    (function() {
+      var u = new URLSearchParams(window.location.search);
+      var KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id','fbclid','ttclid','click_id','_fbp','gclid','xcod','sck','cv','salesCode'];
+      var captured = {};
+      KEYS.forEach(function(k){ var v = u.get(k); if (v) captured[k] = v; });
+      try {
+        var saved = JSON.parse(sessionStorage.getItem('shark_utms') || '{}');
+        Object.keys(captured).forEach(function(k){ saved[k] = captured[k]; });
+        sessionStorage.setItem('shark_utms', JSON.stringify(saved));
+        captured = saved;
+      } catch(e) {}
+      function buildLink(originalHref) {
+        var url = new URL(originalHref, location.origin);
+        Object.keys(captured).forEach(function(k){
+          if (!url.searchParams.has(k)) url.searchParams.set(k, captured[k]);
+        });
+        return url.toString();
+      }
+      document.addEventListener('click', function(ev){
+        var alvo = (ev.target && ev.target.nodeType === 3) ? ev.target.parentElement : ev.target;
+        var btn = (alvo && alvo.closest) ? alvo.closest('a.button, a.cta, a[href*="/l/"], a[href*="/c/"], a[href*="/b/"]') : null;
+        if (!btn) return;
+        try { btn.href = buildLink(btn.href); } catch(err) {}
+      }, true);
+    })();
+    </script>
+  
+
+</body></html>
